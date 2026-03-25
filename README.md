@@ -2,6 +2,20 @@
 
 Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizacji. Zaimplementowany został algorytm ... pozwalający na optymalizację jednej z zaproponowanych funkcji celu. 
 
+## Struktura repozytorium :artificial_satellite:
+
+```text
+.
+├── README.md
+├── src
+│   ├── index.js
+│   └── styles.css
+└── package.json
+
+
+
+
+
 ## Instalacja :bulb:
 
 Autorzy zakładają, że pobierający stosują system operacyjny Linux lub korzystają z powłoki Git Bash dla systemów Windows. W przypadku innej konfiguracji prosimy o kontakt.
