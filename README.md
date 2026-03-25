@@ -29,7 +29,7 @@ Po utworzeniu środowiska należy je aktywować:
 source env/Scripts/activate
 ```
 
-W pliku "requirements.txt" znajdują się nazwy wszystkich bibliotek zastosowanych przez autorów projektu, aby zainstalować stosowane przez autorów wersje bibliotek należy użyć komendy: 
+W pliku ```requirements.txt``` znajdują się nazwy wszystkich bibliotek zastosowanych przez autorów projektu, aby zainstalować stosowane przez autorów wersje bibliotek należy użyć komendy: 
 
 ```bash 
 pip install -r requirements.txt
