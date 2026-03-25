@@ -12,7 +12,6 @@ Projekt_optymalizacja/
 │   └── funkcje.py
 ├── requirements.txt
 └── README.md
-
 ```
 
 
