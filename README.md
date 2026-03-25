@@ -53,4 +53,4 @@ pip install -r requirements.txt
 
 ## Autorzy :brain:
 
-Autorami projektu są Jakub Hinca oraz Emanuel Gifuni. 
+Autorami projektu są **Jakub Hinca** oraz **Emanuel Gifuni**. 
