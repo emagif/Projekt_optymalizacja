@@ -1,10 +1,10 @@
-# Projekt optymalizacja
+# Projekt optymalizacja :rocket :bulb 
 
 Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizacji. Zaimplementowany został algorytm ... pozwalający na optymalizację jednej z zaproponowanych funkcji celu. 
 
 ## Instalacja
 
-Autorzy zakładają, że pobierający stosują systemu operacyjnego Linux lub korzystają z powłoki Git Bash dla systemów Windows. W przypadku innej konfiguracji prosimy o kontakt.
+Autorzy zakładają, że pobierający stosują system operacyjny Linux lub korzystają z powłoki Git Bash dla systemów Windows. W przypadku innej konfiguracji prosimy o kontakt.
 
 W pierwszej kolejności należy sklonować repozytorium na swoją maszynę z wykorzystaniem komendy: 
 
@@ -35,3 +35,8 @@ W pliku "requirements.txt" znajdują się nazwy wszystkich bibliotek zastosowany
 pip install -r requirements.txt
 ```
 
+
+
+## Autorzy
+
+Autorami projektu są Jakub Hinca oraz Emanuel Gifuni. 
