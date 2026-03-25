@@ -20,7 +20,7 @@ Projekt_optymalizacja/
 
 Autorzy zakładają, że pobierający stosują system operacyjny Linux lub korzystają z powłoki Git Bash dla systemów Windows. W przypadku innej konfiguracji prosimy o kontakt.
 
-W pierwszej kolejności należy sklonować repozytorium na swoją maszynę z wykorzystaniem komendy: 
+W pierwszej kolejności należy sklonować repozytorium na swoją maszynę (zalecane użycie SSH) z wykorzystaniem komendy: 
 
 ```bash
 git clone git@github.com:emagif/Projekt_optymalizacja.git
@@ -48,7 +48,7 @@ W pliku ```requirements.txt``` znajdują się nazwy wszystkich bibliotek zastoso
 ```bash 
 pip install -r requirements.txt
 ```
-
+Nie jest sugerowane instalowanie "z ręki" tych samych pakietów co zawarte w ```requirements.txt```. Najlepiej zastosować się do powyższych zaleceń. 
 
 
 ## Autorzy :brain:
