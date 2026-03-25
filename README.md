@@ -5,14 +5,15 @@ Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizac
 ## Struktura repozytorium :artificial_satellite:
 
 ```text
-.
-├── README.md
-├── src
-│   ├── index.js
-│   └── styles.css
-└── package.json
+Projekt_optymalizacja/
+├── env/
+├── main/
+│   ├── main.py
+│   └── funkcje.py
+├── requirements.txt
+└── README.md
 
-
+```
 
 
 
