@@ -48,7 +48,7 @@ W pliku ```requirements.txt``` znajdują się nazwy wszystkich bibliotek zastoso
 ```bash 
 pip install -r requirements.txt
 ```
-Nie jest sugerowane instalowanie "z ręki" tych samych pakietów co zawarte w ```requirements.txt```. Najlepiej zastosować się do powyższych zaleceń. 
+Nie jest sugerowane instalowanie "z ręki" tych samych pakietów, które są zawarte w ```requirements.txt```. Najlepiej zastosować się do powyższych zaleceń. 
 
 
 ## Autorzy :brain:
