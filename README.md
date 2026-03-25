@@ -1,4 +1,4 @@
-# Projekt_optymalizacja
+# Projekt optymalizacja
 
 Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizacji. Zaimplementowany został algorytm ... pozwalający na optymalizację jednej z zaproponowanych funkcji celu. 
 
