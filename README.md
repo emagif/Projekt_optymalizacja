@@ -1,8 +1,8 @@
-# Projekt optymalizacja :rocket :bulb 
+# Projekt optymalizacja :rocket:
 
 Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizacji. Zaimplementowany został algorytm ... pozwalający na optymalizację jednej z zaproponowanych funkcji celu. 
 
-## Instalacja
+## Instalacja :bulb:
 
 Autorzy zakładają, że pobierający stosują system operacyjny Linux lub korzystają z powłoki Git Bash dla systemów Windows. W przypadku innej konfiguracji prosimy o kontakt.
 
@@ -37,6 +37,6 @@ pip install -r requirements.txt
 
 
 
-## Autorzy
+## Autorzy :brain:
 
 Autorami projektu są Jakub Hinca oraz Emanuel Gifuni. 
