@@ -56,4 +56,4 @@ Nie jest sugerowane instalowanie "z ręki" tych samych pakietów, które są zaw
 
 Autorami projektu są **Jakub Hinca** oraz **Emanuel Gifuni**. 
 
-*Automatyka, robotyka i systemy sterowania - I semestr.*
+*Automatyka, robotyka i systemy sterowania - I semestr studiów magisterskich.*
