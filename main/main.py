@@ -1,8 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from draw_func import *
+from algorithms import *
 
 
 if __name__ == "__main__":
-    Bk = np.eye(2)
-    print(x1)
+    
+    alpha_k = Quasi_Newton_BFGS(1, 2, 1)
+    print(alpha_k)
+    
+    
