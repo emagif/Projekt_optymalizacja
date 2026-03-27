@@ -9,7 +9,8 @@ Projekt_optymalizacja/
 ├── env/
 ├── main/
 │   ├── main.py
-│   └── funkcje.py
+│   ├── algorithms.py
+│   └── draw_func.py
 ├── requirements.txt
 └── README.md
 ```
