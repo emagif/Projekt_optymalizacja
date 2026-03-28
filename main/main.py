@@ -6,7 +6,10 @@ from algorithms import *
 
 if __name__ == "__main__":
     
-    alpha_k = Quasi_Newton_BFGS(1, 2, 1)
-    print(alpha_k)
+
+    val, x1, x2, iter_num = Quasi_Newton_BFGS(-1.2, 1, 1)
+    print(f"val: {val}, x1: {x1}, x2: {x2}, iter_num: {iter_num}")
+    
+    
     
     
