@@ -163,3 +163,4 @@ def Quasi_Newton_BFGS(start_x1, start_x2, function):
 
 #     elif(funkcja_celu == 3): # optymalizacja dla Himmelblaua
 
+#elif (funckja_celu == 4): # optymalizacja dla funkcji bananowej
