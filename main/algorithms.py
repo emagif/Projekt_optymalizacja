@@ -155,12 +155,4 @@ def Quasi_Newton_BFGS(start_x1, start_x2, function):
 
         return best_result, xk_1[0], xk_1[1], i
 
-
-
-
-#     elif(funkcja_celu == 2): # optymalizacja dla wielbłądowej
-
-
-#     elif(funkcja_celu == 3): # optymalizacja dla Himmelblaua
-
-#elif (funckja_celu == 4): # optymalizacja dla funkcji bananowej
+#projekt ZPB
