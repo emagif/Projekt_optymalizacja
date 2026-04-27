@@ -69,16 +69,26 @@ def grad_himmelblau(xk):
     grad_x2 = 4 * xk[1] * (xk[0] + (xk[1]**2)-7) + 2 * ((xk[0]**2) + xk[1] - 11)
     return np.array([grad_x1, grad_x2])
 ```
-Następnie zaimplementowane zostały metody Quasi-Newtonowskie (BFGS oraz DFP). Struktura funkcji jest następująca: 
+Następnie zaimplementowane zostały metody Quasi-Newtonowskie (BFGS oraz DFP). Struktury funkcji są następujące: 
 
 ```bash 
-def Quasi_Newton_BFGS(start_x1, start_x2, function):
+def Quasi_Newton_BFGS(start_x1, start_x2, function, grad):
     .
     .
     .
     return best_result, xk_1[0], xk_1[1], i
 ```
-zatem funkcja przyjmuje dwa punkty startowe oraz optymalizowaną wartość funkcji celu. Przy czym jeżeli użytkownik chce wywołać optymalizację dla funkcji Rosenbrocka powinien wpisać nr 1, dla funkcji Three-Hump Camel nr 2, a dla funkcji Himmelblaua nr 3. Funkcja zwraca najlepsze rozwiązanie, punkty dla których jest ona przyjmowana oraz liczbę iteracji potrzebną do osiągnięcia rezultatu końcowego. 
+zatem funkcja przyjmuje dwa punkty startowe, funkcję celu oraz jej gradient. Funkcja zwraca najlepsze rozwiązanie, punkty dla których jest ona przyjmowana oraz liczbę iteracji potrzebną do osiągnięcia rezultatu końcowego. 
+
+
+```bash
+def Quasi_Newton_DFP(start_x1, start_x2, function, grad):
+    .
+    .
+    .
+    return best_result, xk_1[0], xk_1[1], i
+```
+Powyższa funkcja implementująca wariację DFP, przyjmuje dokładnie te same argument i zwraca te same wartości po wykonaniu obliczeń. 
 
 
 ## Autorzy :brain:
