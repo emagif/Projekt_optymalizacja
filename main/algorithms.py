@@ -27,12 +27,12 @@ def grad_himmelblau(xk):
     return np.array([grad_x1, grad_x2])
 
     
-def Quasi_Newton_BFGS(start_x1, start_x2, function):
+def Quasi_Newton_BFGS(start_x1, start_x2, function, grad):
     
 
     xk = np.array([start_x1, start_x2])
     Hk = np.eye(2) * 0.1
-    grad_k = np.array([0,0])
+    grad_k = grad(xk)
     i = 0
     stop_cond = 1e-6
     best_result = float('inf')
@@ -41,118 +41,205 @@ def Quasi_Newton_BFGS(start_x1, start_x2, function):
     max_iter = 1000
 
     alpha_max = 0.1
+
+    # grad_k = grad_rosenbrock(xk)
+
+    while np.linalg.norm(grad_k) >= tol and max_iter >= i:
+            
+        val_k = function(xk)
+        # pk = np.linalg.solve(Hk, -grad_k)
+        pk = -Hk @ grad_k
+        alpha_k, fc, gc, f1, f2, f3 = line_search(function, grad, xk, pk) 
+
+        if(alpha_k is None or alpha_k > alpha_max):
+            alpha_k = alpha_max
+
+        print(f"alpha_k: {alpha_k}")
+            
+        xk_1 = xk + alpha_k * pk
+        val_k_1 = function(xk_1)
+        grad_k_1 = grad(xk_1)
+        sk = xk_1 - xk 
+        yk = grad_k_1 - grad_k
+        rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
+        Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
+
+        differ = val_k_1 - val_k
+        xk = xk_1
+        Hk = Hk_1
+        val_k = val_k_1
+        i+=1
+        best_result = val_k_1
+        grad_k = grad_k_1
+
+        if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
+            break
+
+    return best_result, xk_1[0], xk_1[1], i
+
+
+
+
+
+def Quasi_Newton_DFP(start_x1, start_x2, function, grad):
     
 
-    if(function == 1): # optymalizacja dla Rosenbrocka
+    xk = np.array([start_x1, start_x2])
+    Hk = np.eye(2) * 0.1
+    grad_k = grad(xk)
+    i = 0
+    stop_cond = 1e-6
+    best_result = float('inf')
+    differ = 1
+    tol = 1e-7
+    max_iter = 1000
 
-        grad_k = grad_rosenbrock(xk)
+    alpha_max = 0.1
 
-        while np.linalg.norm(grad_k) >= tol and max_iter >= i:
+
+    while np.linalg.norm(grad_k) >= tol and max_iter >= i:
             
-            val_k = rosenbrock_f(xk)
-            pk = np.linalg.solve(Hk, -grad_k)
-            alpha_k, fc, gc, f1, f2, f3 = line_search(rosenbrock_f, grad_rosenbrock, xk, pk) 
+        val_k = function(xk)
+        pk = -Hk @ grad_k
+        alpha_k, fc, gc, f1, f2, f3 = line_search(function, grad, xk, pk) 
 
-            if(alpha_k is None or alpha_k > alpha_max):
-                alpha_k = alpha_max
+        if(alpha_k is None or alpha_k > alpha_max):
+            alpha_k = alpha_max
 
-            print(f"alpha_k: {alpha_k}")
+        print(f"alpha_k: {alpha_k}")
             
-            xk_1 = xk + alpha_k * pk
-            val_k_1 = rosenbrock_f(xk_1)
-            grad_k_1 = grad_rosenbrock(xk_1)
-            sk = xk_1 - xk 
-            yk = grad_k_1 - grad_k
-            rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
-            Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
+        xk_1 = xk + alpha_k * pk
+        val_k_1 = function(xk_1)
+        grad_k_1 = grad(xk_1)
+        sk = xk_1 - xk 
+        yk = grad_k_1 - grad_k
+        rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
+        Hk_1 = Hk + (np.outer(sk, sk))/(sk @ yk) - (Hk @ np.outer(yk, yk) @ Hk)/(yk @ Hk @ yk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
 
-            differ = val_k_1 - val_k
-            xk = xk_1
-            Hk = Hk_1
-            val_k = val_k_1
-            i+=1
-            best_result = val_k_1
-            grad_k = grad_k_1
+        differ = val_k_1 - val_k
+        xk = xk_1
+        Hk = Hk_1
+        val_k = val_k_1
+        i+=1
+        best_result = val_k_1
+        grad_k = grad_k_1
 
-            if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
-                break
+        if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
+            break
 
-        return best_result, xk_1[0], xk_1[1], i
+    return best_result, xk_1[0], xk_1[1], i
+    
+    
 
-    elif(function == 2):
+    # if(function == 1): # optymalizacja dla Rosenbrocka
+
+    #     grad_k = grad_rosenbrock(xk)
+
+    #     while np.linalg.norm(grad_k) >= tol and max_iter >= i:
+            
+    #         val_k = rosenbrock_f(xk)
+    #         pk = np.linalg.solve(Hk, -grad_k)
+    #         alpha_k, fc, gc, f1, f2, f3 = line_search(rosenbrock_f, grad_rosenbrock, xk, pk) 
+
+    #         if(alpha_k is None or alpha_k > alpha_max):
+    #             alpha_k = alpha_max
+
+    #         print(f"alpha_k: {alpha_k}")
+            
+    #         xk_1 = xk + alpha_k * pk
+    #         val_k_1 = rosenbrock_f(xk_1)
+    #         grad_k_1 = grad_rosenbrock(xk_1)
+    #         sk = xk_1 - xk 
+    #         yk = grad_k_1 - grad_k
+    #         rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
+    #         Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
+
+    #         differ = val_k_1 - val_k
+    #         xk = xk_1
+    #         Hk = Hk_1
+    #         val_k = val_k_1
+    #         i+=1
+    #         best_result = val_k_1
+    #         grad_k = grad_k_1
+
+    #         if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
+    #             break
+
+    #     return best_result, xk_1[0], xk_1[1], i
+
+    # elif(function == 2):
         
-        grad_k = grad_three_hump_camel(xk)
+    #     grad_k = grad_three_hump_camel(xk)
 
-        while np.linalg.norm(grad_k) >= tol and max_iter >= i:
+    #     while np.linalg.norm(grad_k) >= tol and max_iter >= i:
             
-            val_k = three_hump_camel_f(xk)
-            # pk = np.linalg.solve(Hk, -grad_k)
-            pk = -Hk @ grad_k
-            alpha_k, fc, gc, f1, f2, f3 = line_search(three_hump_camel_f, grad_three_hump_camel, xk, pk) 
+    #         val_k = three_hump_camel_f(xk)
+    #         # pk = np.linalg.solve(Hk, -grad_k)
+    #         pk = -Hk @ grad_k
+    #         alpha_k, fc, gc, f1, f2, f3 = line_search(three_hump_camel_f, grad_three_hump_camel, xk, pk) 
 
-            if(alpha_k is None or alpha_k > alpha_max):
-                alpha_k = alpha_max
+    #         if(alpha_k is None or alpha_k > alpha_max):
+    #             alpha_k = alpha_max
 
-            print(f"alpha_k: {alpha_k}")
+    #         print(f"alpha_k: {alpha_k}")
             
-            xk_1 = xk + alpha_k * pk
-            val_k_1 = three_hump_camel_f(xk_1)
-            grad_k_1 = grad_three_hump_camel(xk_1)
-            sk = xk_1 - xk 
-            yk = grad_k_1 - grad_k
-            rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
-            Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
+    #         xk_1 = xk + alpha_k * pk
+    #         val_k_1 = three_hump_camel_f(xk_1)
+    #         grad_k_1 = grad_three_hump_camel(xk_1)
+    #         sk = xk_1 - xk 
+    #         yk = grad_k_1 - grad_k
+    #         rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
+    #         Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
 
-            differ = val_k_1 - val_k
-            xk = xk_1
-            Hk = Hk_1
+    #         differ = val_k_1 - val_k
+    #         xk = xk_1
+    #         Hk = Hk_1
 
-            val_k = val_k_1
-            i+=1
-            best_result = val_k_1
-            grad_k = grad_k_1
+    #         val_k = val_k_1
+    #         i+=1
+    #         best_result = val_k_1
+    #         grad_k = grad_k_1
 
-            if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
-                break
+    #         if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
+    #             break
 
-        return best_result, xk_1[0], xk_1[1], i
+    #     return best_result, xk_1[0], xk_1[1], i
 
-    elif(function == 3):
+    # elif(function == 3):
         
-        grad_k = grad_himmelblau(xk)
+    #     grad_k = grad_himmelblau(xk)
 
-        while np.linalg.norm(grad_k) >= tol and max_iter >= i:
+    #     while np.linalg.norm(grad_k) >= tol and max_iter >= i:
             
-            val_k = himmelblau_f(xk)
-            # pk = np.linalg.solve(Hk, -grad_k)
-            pk = -Hk @ grad_k
-            alpha_k, fc, gc, f1, f2, f3 = line_search(himmelblau_f, grad_himmelblau, xk, pk) 
+    #         val_k = himmelblau_f(xk)
+    #         # pk = np.linalg.solve(Hk, -grad_k)
+    #         pk = -Hk @ grad_k
+    #         alpha_k, fc, gc, f1, f2, f3 = line_search(himmelblau_f, grad_himmelblau, xk, pk) 
 
-            if(alpha_k is None or alpha_k > alpha_max):
-                alpha_k = alpha_max
+    #         if(alpha_k is None or alpha_k > alpha_max):
+    #             alpha_k = alpha_max
 
-            print(f"alpha_k: {alpha_k}")
+    #         print(f"alpha_k: {alpha_k}")
             
-            xk_1 = xk + alpha_k * pk
-            val_k_1 = himmelblau_f(xk_1)
-            grad_k_1 = grad_himmelblau(xk_1)
-            sk = xk_1 - xk 
-            yk = grad_k_1 - grad_k
-            rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
-            Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
+    #         xk_1 = xk + alpha_k * pk
+    #         val_k_1 = himmelblau_f(xk_1)
+    #         grad_k_1 = grad_himmelblau(xk_1)
+    #         sk = xk_1 - xk 
+    #         yk = grad_k_1 - grad_k
+    #         rho_k = 1.0 / (yk @ sk + 1e-12) # algebra siedzi, nawet jak yk nie jest transponowane (sprawdzone) - można unit test napisać; ta dodana wartość jest po to, żeby mianownik się nie wyzerował
+    #         Hk_1 = (np.eye(2) - rho_k * np.outer(sk,yk)) @ Hk @(np.eye(2) - rho_k * np.outer(yk, sk)) + rho_k * np.outer(sk, sk) # tutaj np.outer(x,y) to iloczyn zewnętrzny także matma się zgadza
 
-            differ = val_k_1 - val_k
-            xk = xk_1
-            Hk = Hk_1
+    #         differ = val_k_1 - val_k
+    #         xk = xk_1
+    #         Hk = Hk_1
             
-            val_k = val_k_1
-            i+=1
-            best_result = val_k_1
-            grad_k = grad_k_1
+    #         val_k = val_k_1
+    #         i+=1
+    #         best_result = val_k_1
+    #         grad_k = grad_k_1
 
-            if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
-                break
+    #         if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
+    #             break
 
-        return best_result, xk_1[0], xk_1[1], i
+    #     return best_result, xk_1[0], xk_1[1], i
 
-#projekt ZPB

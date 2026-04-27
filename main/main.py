@@ -7,8 +7,11 @@ from algorithms import *
 if __name__ == "__main__":
     
 
-    val, x1, x2, iter_num = Quasi_Newton_BFGS(0.2, -0.4, 1)
+    val, x1, x2, iter_num = Quasi_Newton_DFP(0.3, -0.4, rosenbrock_f, grad_rosenbrock)
     print(f"val: {val}, x1: {x1}, x2: {x2}, iter_num: {iter_num}")
+
+
+
     
     
     
