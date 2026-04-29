@@ -30,7 +30,7 @@ def rosenbrock_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path
     plt.show()
 
 
-def rosenbrock_f_draw_3D_surf(x1, x2, span, result):
+def rosenbrock_f_draw_3D_surf(x1, x2, span, result, func_val):
     x1_new = np.linspace(x1[0], x1[1], span)
     x2_new = np.linspace(x2[0], x2[1], span)
 
@@ -40,6 +40,7 @@ def rosenbrock_f_draw_3D_surf(x1, x2, span, result):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
+    ax.scatter(result[0], result[1], func_val, color='red', s=100)
 
     ax.set_title('Funkcja Rosenbrocka')
     ax.set_xlabel("x1")
@@ -53,25 +54,34 @@ def rosenbrock_f_draw_3D_surf(x1, x2, span, result):
 
 # Ta wielbłądowa funkcja 
 
-def three_hump_camel_f_draw_contour(x1, x2, levels, span, result, path=None):
-    x1_new = np.linspace(x1[0], x1[1], span)
-    x2_new = np.linspace(x2[0], x2[1], span)
+def three_hump_camel_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None):
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
     Z = 2*X**2 - 1.05 * X**4 + ((X**6)/6) + X*Y + Y**2
 
+
     plt.figure()
     plt.contour(X, Y, Z, levels = levels)
     plt.colorbar()
+
+    plt.scatter(result[0], result[1], color='red', s=100, label='punkt końcowy')
+    plt.scatter(xk_first[0], xk_first[1], color='green', s=100, label='punkt początkowy')
+
+    if path is not None:
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1], 'o-', color='blue', linewidth=1, label='trajektoria')
+
     plt.xlabel("x1")
     plt.ylabel("x2")
     plt.title("Funkcja Three-Hump Camel")
     plt.show()
 
 
-def three_hump_camel_f_draw_3D(x1, x2, span):
-    x1_new = np.linspace(x1[0], x1[1], span)
-    x2_new = np.linspace(x2[0], x2[1], span)
+def three_hump_camel_f_draw_3D(x1, x2, resolution, result, func_val):
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
     Z = 2*X**2 - 1.05 * X**4 + ((X**6)/6) + X*Y + Y**2
@@ -80,6 +90,7 @@ def three_hump_camel_f_draw_3D(x1, x2, span):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
+    ax.scatter(result[0], result[1], func_val, color='red', s=100)
 
     ax.set_title('Funkcja Three-Hump Camel')
     ax.set_xlabel("x1")
@@ -93,9 +104,9 @@ def three_hump_camel_f_draw_3D(x1, x2, span):
 
 # Tutaj funkcja Himmelblaua 
 
-def himmelblau_f_draw_contour(x1, x2, levels, span, result, path=None):
-    x1_new = np.linspace(x1[0], x1[1], span)
-    x2_new = np.linspace(x2[0], x2[1], span)
+def himmelblau_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None):
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
     Z = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
@@ -103,6 +114,16 @@ def himmelblau_f_draw_contour(x1, x2, levels, span, result, path=None):
     plt.figure()
     plt.contour(X, Y, Z, levels = levels)
     plt.colorbar()
+
+
+    plt.scatter(result[0], result[1], color='red', s=100, label='punkt końcowy')
+    plt.scatter(xk_first[0], xk_first[1], color='green', s=100, label='punkt początkowy')
+
+    if path is not None:
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1], 'o-', color='blue', linewidth=1, label='trajektoria')
+
+
     plt.xlabel("x1")
     plt.ylabel("x2")
     plt.title("Funkcja Himmeblaua")
@@ -110,9 +131,9 @@ def himmelblau_f_draw_contour(x1, x2, levels, span, result, path=None):
 
 
 
-def himmelblau_f_draw_3D(x1, x2, span):
-    x1_new = np.linspace(x1[0], x1[1], span)
-    x2_new = np.linspace(x2[0], x2[1], span)
+def himmelblau_f_draw_3D_surf(x1, x2, resolution, result, func_val):
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
     Z = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
@@ -121,6 +142,7 @@ def himmelblau_f_draw_3D(x1, x2, span):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
+    ax.scatter(result[0], result[1], func_val, color='red', s=100)
 
     ax.set_title('Funkcja Himmeblau')
     ax.set_xlabel("x1")
