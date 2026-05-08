@@ -5,22 +5,36 @@ from draw_func import *
 def rosenbrock_f(xk):
     return (1-xk[0])**2 + 100*(xk[1] - xk[0]**2)**2
 
-def three_hump_camel_f(xk):
-    return 2*xk[0]**2 - 1.05*xk[0]**4 + ((xk[0]**6)/6) + xk[0]*xk[1] + xk[1]**2
-
-def himmelblau_f(xk):
-    return (xk[0]**2 + xk[1] - 11)**2 + (xk[0] + xk[1]**2 - 7)**2
-
 def grad_rosenbrock(xk): #  gradient liczony dla Rosenbrocka
     grad_x1 = -2*(1 - xk[0]) - 400*xk[0]*(xk[1] - xk[0]**2)
     grad_x2 = 200*(xk[1] - xk[0]**2)
     return np.array([grad_x1, grad_x2])
 
+def rosenbrock_constrained(xk):
+    return (1-xk[0])**2 + 100*(xk[1] - xk[0]**2)**2 + 1.5 - 0.5*xk[0] - xk[1]
+
+# def rosenbrock_penalty_f(xk):
+
+
+def three_hump_camel_f(xk):
+    return 2*xk[0]**2 - 1.05*xk[0]**4 + ((xk[0]**6)/6) + xk[0]*xk[1] + xk[1]**2
 
 def grad_three_hump_camel(xk): # liczony gradient dla wielbłądowej 
     grad_x1 = 4 * xk[0] - 4 * 1.05 * (xk[0]**3) + (xk[0]**5) + xk[1]
     grad_x2 = xk[0] + 2 * xk[1]
     return np.array([grad_x1, grad_x2])
+
+def three_hump_camel_constrained(xk):
+    if (xk[0]**2 + xk[1]**2 > 1):
+        return np.inf
+    return 2*xk[0]**2 - 1.05*xk[0]**4 + ((xk[0]**6)/6) + xk[0]*xk[1] + xk[1]**2
+
+# def three_hump_camel_penalty_f(xk):
+
+
+def himmelblau_f(xk):
+    return (xk[0]**2 + xk[1] - 11)**2 + (xk[0] + xk[1]**2 - 7)**2
+
 
 def grad_himmelblau(xk): 
     grad_x1 = 4 * xk[0] * ((xk[0]**2) + xk[1] - 11) + 2 * (xk[0] + (xk[1]**2) - 7)
@@ -28,6 +42,15 @@ def grad_himmelblau(xk):
     return np.array([grad_x1, grad_x2])
 
     
+def himmelblau_constrained(xk):
+    if (xk[0] - 2)**2 + (xk[1] - 1)**2 > 9:
+        return np.inf
+    return (xk[0]**2 + xk[1] - 11)**2 + (xk[0] + xk[1]**2 - 7)**2
+
+# def himmelblau_penalty_f(xk):
+
+
+
 def Quasi_Newton_BFGS(start_x1, start_x2, function, grad, draw_contour, draw_3D, x_bounds, y_bounds):
 
     xk = np.array([start_x1, start_x2], dtype=float)
