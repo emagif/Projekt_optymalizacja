@@ -79,7 +79,7 @@ def three_hump_camel_f_draw_contour(x1, x2, levels, resolution, xk_first, result
     plt.show()
 
 
-def three_hump_camel_f_draw_3D(x1, x2, resolution, result, func_val):
+def three_hump_camel_f_draw_3D_surf(x1, x2, resolution, result, func_val):
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
 
