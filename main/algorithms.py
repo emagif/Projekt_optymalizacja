@@ -157,7 +157,7 @@ def Quasi_Newton_DFP(start_x1, start_x2, function, grad, draw_contour, draw_3D, 
         if np.any(np.isnan(xk)) or np.any(np.isinf(xk)):
             break
     path = np.array(path)
-    draw_contour([x_bounds[0], x_bounds[1]], [y_bounds[0], y_bounds[1]], 50, 100, [start_x1, start_x2], [xk[0], xk[1]], path)
+    draw_contour([x_bounds[0], x_bounds[1]], [y_bounds[0], y_bounds[1]], 50, 10, [start_x1, start_x2], [xk[0], xk[1]], path)
     draw_3D([x_bounds[0], x_bounds[1]], [y_bounds[0], y_bounds[1]], 50, [xk[0], xk[1]], function(xk))
     iter_num = len(path)
     return function(xk), xk_1[0], xk_1[1], iter_num
