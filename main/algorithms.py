@@ -35,9 +35,10 @@ def rosenbrock_penalty_f(xk, penalty=100):
 
     g = 1.5 - 0.5*xk[0] - xk[1]
 
-    g_pos = softplus(g)
+#    g_pos = softplus(g)
+#    return f + penalty * g_pos**2
 
-    return f + penalty * g_pos**2
+    return f + penalty * g**2
 
 def grad_rosenbrock_penalty(xk, penalty=100):
     
@@ -46,11 +47,13 @@ def grad_rosenbrock_penalty(xk, penalty=100):
 
     g = 1.5 - 0.5*xk[0] - xk[1]
 
-    s = softplus(g)
-    ds = sigmoid(g)
+#    s = softplus(g)
+#    ds = sigmoid(g)
 
-    coef = 2 * penalty * s * ds
+#    coef = 2 * penalty * s * ds
 
+    coef = 2 * penalty * g
+    
     grad_x0 = grad_f_x0 + coef * (-0.5)
     grad_x1 = grad_f_x1 + coef * (-1.0)
 
