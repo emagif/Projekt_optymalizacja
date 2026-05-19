@@ -62,9 +62,9 @@ def rosenbrock_penalty_draw_contour(x1, x2, levels, resolution, xk_first, result
 
     # constraint
     g = 1.5 - 0.5*X - Y
-    g_pos = np.log1p(np.exp(g))  # softplus (stabilne)
+    # g_pos = np.log1p(np.exp(g))  # softplus (stabilne)
 
-    Z = f + penalty * g_pos**2
+    Z = f + penalty * g**2
 
     plt.figure()
     plt.contour(X, Y, Z, levels=levels)
@@ -93,9 +93,9 @@ def rosenbrock_penalty_draw_3D(x1, x2, span, result, func_val, penalty=100):
     f = (1 - X)**2 + 100 * (Y - X**2)**2
 
     g = 1.5 - 0.5*X - Y
-    g_pos = np.log1p(np.exp(g))
+    # g_pos = np.log1p(np.exp(g))
 
-    Z = f + penalty * g_pos**2
+    Z = f + penalty * g**2
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
