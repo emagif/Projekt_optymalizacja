@@ -295,8 +295,6 @@ def himmelblau_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path
     plt.title("Funkcja Himmeblaua")
     plt.show()
 
-
-
 def himmelblau_f_draw_3D_surf(x1, x2, resolution, result, func_val):
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
@@ -314,6 +312,141 @@ def himmelblau_f_draw_3D_surf(x1, x2, resolution, result, func_val):
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
     ax.set_zlabel("f(x1, x2)")
+    fig.colorbar(surf, shrink=0.5)
+
+    plt.show()
+
+def himmelblau_penalty_draw_contour(
+        x1, x2,
+        levels,
+        resolution,
+        xk_first,
+        result,
+        path=None,
+        penalty=100):
+
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
+
+    X, Y = np.meshgrid(x1_new, x2_new)
+
+    # funkcja Himmelblaua
+    f = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
+
+    # constraint
+    g = X - Y + 3
+
+    violation = np.maximum(0, g)
+
+    # funkcja z karą
+    Z = f + penalty * violation**2
+
+    plt.figure(figsize=(8,6))
+
+    contour = plt.contour(X, Y, Z, levels=levels)
+    plt.colorbar(contour)
+
+    # prosta constraintu:
+    # x1 - x2 + 2 = 0
+    # x2 = x1 + 2
+    line_x = np.linspace(x1[0], x1[1], 400)
+    line_y = line_x + 3
+
+    plt.plot(
+        line_x,
+        line_y,
+        color='black',
+        linewidth=2,
+        label='x1 - x2 + 3 = 0'
+    )
+
+    # punkt startowy
+    plt.scatter(
+        xk_first[0],
+        xk_first[1],
+        color='green',
+        s=100,
+        label='punkt początkowy'
+    )
+
+    # punkt końcowy
+    plt.scatter(
+        result[0],
+        result[1],
+        color='red',
+        s=100,
+        label='punkt końcowy'
+    )
+
+    # trajektoria
+    if path is not None:
+        path = np.array(path)
+
+        plt.plot(
+            path[:,0],
+            path[:,1],
+            'o-',
+            color='blue',
+            linewidth=1,
+            label='trajektoria'
+        )
+
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+
+    plt.title("Himmelblau + Penalty")
+
+    plt.legend()
+    plt.show()
+
+def himmelblau_penalty_draw_3D(
+        x1, x2,
+        resolution,
+        result,
+        func_val,
+        penalty=100):
+
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
+
+    X, Y = np.meshgrid(x1_new, x2_new)
+
+    # funkcja Himmelblaua
+    f = (X**2 + Y - 11)**2 + \
+        (X + Y**2 - 7)**2
+
+    # constraint
+    g = X - Y + 3
+
+    violation = np.maximum(0, g)
+
+    # penalty
+    Z = f + penalty * violation**2
+
+    fig = plt.figure(figsize=(10,7))
+
+    ax = plt.axes(projection='3d')
+
+    surf = ax.plot_surface(
+        X, Y, Z,
+        cmap='viridis',
+        edgecolor='none'
+    )
+
+    ax.scatter(
+        result[0],
+        result[1],
+        func_val,
+        color='red',
+        s=100
+    )
+
+    ax.set_title("Himmelblau + Penalty")
+
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    ax.set_zlabel("f(x1,x2)")
+
     fig.colorbar(surf, shrink=0.5)
 
     plt.show()
