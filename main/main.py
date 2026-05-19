@@ -8,5 +8,5 @@ if __name__ == "__main__":
     
 # 0.9 0.8
 
-    val, x1, x2, iter_num = Quasi_Newton_BFGS(3, -2, [three_hump_camel_penalty_f, grad_three_hump_camel_penalty, rosenbrock_penalty_draw_contour, rosenbrock_penalty_draw_3D] , [-6, 6], [-6, 6])
+    val, x1, x2, iter_num = Quasi_Newton_BFGS(3, -2, [three_hump_camel_penalty_f, grad_three_hump_camel_penalty, three_hump_camel_penalty_draw_contour, three_hump_camel_penalty_draw_3D] , [-6, 6], [-6, 6])
     print(f"val: {val}, x1: {x1}, x2: {x2}, iter_num: {iter_num}")
