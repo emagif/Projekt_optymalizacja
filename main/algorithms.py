@@ -96,16 +96,23 @@ def three_hump_camel_penalty_f(xk, penalty=100):
     return f + penalty * violation**2
 
 def grad_three_hump_camel_penalty(xk, penalty=100):
+    grad_f_x1 = 4*xk[0] - 4*1.05*(xk[0]**3) + (xk[0]**5) + xk[1]
+    grad_f_x2 = xk[0] + 2*xk[1]
+
     g = xk[0]**2 + xk[1]**2 - 1
 
     if g <= 0:
-        return np.zeros(2)
+        return np.array([grad_f_x1, grad_f_x2])
 
     grad_common = 2 * penalty * g
 
-    grad_x1 = grad_common * (2 * xk[0])
-    grad_x2 = grad_common * (2 * xk[1])
-    return np.array([grad_x1, grad_x2])
+    penalty_x1 = grad_common * (2*xk[0])
+    penalty_x2 = grad_common * (2*xk[1])
+
+    return np.array([
+        grad_f_x1 + penalty_x1,
+        grad_f_x2 + penalty_x2
+    ])
 
 
 ### HIMMEBLAU
