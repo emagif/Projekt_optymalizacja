@@ -1,6 +1,6 @@
 # Projekt optymalizacja :rocket:
 
-Repozytorium jest poświęcone projektowi w ramach przedmiotu Metody Optymalizacji. Zaimplementowany został algorytm ... pozwalający na optymalizację jednej z zaproponowanych funkcji celu. 
+Repozytorium jest poświęcone projektowi w ramach przedmiotu *Metody Optymalizacji*. Zaimplementowane zostały algorytmy Quasi-Newton'owskie: BFGS i DFP.
 
 ## Struktura repozytorium :artificial_satellite:
 
@@ -51,7 +51,7 @@ W pliku ```requirements.txt``` znajdują się nazwy wszystkich bibliotek zastoso
 ```bash 
 pip install -r requirements.txt
 ```
-Nie jest sugerowane instalowanie "z ręki" tych samych pakietów, które są zawarte w ```requirements.txt```. Najlepiej zastosować się do powyższych zaleceń. 
+Nie jest sugerowane instalowanie "z ręki" tych samych pakietów, które są zawarte w ```requirements.txt```, może to skutkować instalacją niekompatybilnych wersji bibliotek. Najlepiej zastosować się do powyższych zaleceń. 
 
 
 ## Użytkowanie aplikacji :hammer:
@@ -74,21 +74,21 @@ def grad_himmelblau(xk):
 Następnie zaimplementowane zostały metody Quasi-Newtonowskie (BFGS oraz DFP). Struktury funkcji są następujące: 
 
 ```bash 
-def Quasi_Newton_BFGS(start_x1, start_x2, function, grad):
+def Quasi_Newton_BFGS(start_x1, start_x2, functions):
     .
     .
     .
-    return best_result, xk_1[0], xk_1[1], i
+    return (functions[0](xk), xk[0], xk[1], iter_num, f_values, path)
 ```
-zatem funkcja przyjmuje dwa punkty startowe, funkcję celu oraz jej gradient. Funkcja zwraca najlepsze rozwiązanie, punkty dla których jest ona przyjmowana oraz liczbę iteracji potrzebną do osiągnięcia rezultatu końcowego. 
+zatem funkcja przyjmuje dwa punkty startowe, funkcję celu oraz jej gradient.
 
 
 ```bash
-def Quasi_Newton_DFP(start_x1, start_x2, function, grad):
+def Quasi_Newton_DFP(start_x1, start_x2, functions):
     .
     .
     .
-    return best_result, xk_1[0], xk_1[1], i
+    return (functions[0](xk), xk[0], xk[1], len(path), f_values, path)
 ```
 Powyższa funkcja implementująca wariację DFP, przyjmuje dokładnie te same argument i zwraca te same wartości po wykonaniu obliczeń. 
 
