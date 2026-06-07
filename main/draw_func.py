@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 
+### ROSENBROCK
 
 def rosenbrock_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None):
 
@@ -49,69 +50,113 @@ def rosenbrock_f_draw_3D_surf(x1, x2, span, result, func_val):
 
     plt.show()
 
-def rosenbrock_penalty_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None, penalty=100):
+def rosenbrock_f_draw_contour_3_bez_ograniczen(x1, x2, levels, resolution,
+                                             path1, path2, path3, path4):
 
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
 
-    # ROSENBROCK
-    f = (1 - X)**2 + 100 * (Y - X**2)**2
+    Z = np.zeros_like(X)
 
-    # constraint
-    g = 1.5 - 0.5*X - Y
-    # g_pos = np.log1p(np.exp(g))  # softplus (stabilne)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            x = X[i, j]
+            y = Y[i, j]
 
-    Z = f + penalty * g**2
+            Z[i, j] = (1 - x)**2 + 100 * (y - x**2)**2
 
     plt.figure()
-    plt.contour(X, Y, Z, levels=levels)
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
     plt.colorbar()
 
-    plt.scatter(result[0], result[1], color='red', s=100, label='punkt końcowy')
-    plt.scatter(xk_first[0], xk_first[1], color='green', s=100, label='punkt początkowy')
-
-    if path is not None:
+    colors = ['blue', 'orange', 'green', 'red']
+    
+    labels = [
+        'DFP start [1.75,3]',
+        'DFP start [0,3]',
+        'BFGS start [1.75,3]',
+        'BFGS start [0,3]'
+    ]
+    markers = ['o', 's', '^', 'x']
+    for i, path in enumerate([path1, path2, path3, path4]):
         path = np.array(path)
-        plt.plot(path[:, 0], path[:, 1], 'o-', color='blue', linewidth=1, label='trajektoria')
+        plt.plot(path[:, 0], path[:, 1],
+                 marker=markers[i],
+                 color=colors[i],
+                 linewidth=1,
+                 label=labels[i])
 
     plt.xlabel("x1")
     plt.ylabel("x2")
-    plt.title("Rosenbrock + penalty")
+    plt.title("Funkcja Rosenbrocka bez ograniczeń")
     plt.legend()
+    plt.grid(True)
     plt.show()
 
-def rosenbrock_penalty_draw_3D(x1, x2, span, result, func_val, penalty=100):
 
-    x1_new = np.linspace(x1[0], x1[1], span)
-    x2_new = np.linspace(x2[0], x2[1], span)
+def rosenbrock_f_draw_contour_3_z_ograniczeniami(x1, x2, levels, resolution,
+                                             path1, path2, path3, path4):
+
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
 
-    f = (1 - X)**2 + 100 * (Y - X**2)**2
+    Z = np.zeros_like(X)
 
-    g = 1.5 - 0.5*X - Y
-    # g_pos = np.log1p(np.exp(g))
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            x = X[i, j]
+            y = Y[i, j]
 
-    Z = f + penalty * g**2
+            Z[i, j] = (1 - x)**2 + 100 * (y - x**2)**2
 
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
+    plt.figure()
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
+    plt.colorbar()
 
-    surf = ax.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
+    Xg, Yg = np.meshgrid(x1_new, x2_new)
 
-    ax.scatter(result[0], result[1], func_val, color='red', s=100)
+    line_x = x1_new
+    line_y = 1.5 - 0.5 * line_x
 
-    ax.set_title("Rosenbrock + penalty")
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    ax.set_zlabel("f(x)")
+    plt.plot(
+        line_x,
+        line_y,
+        color='black',
+        linewidth=1.5,
+        label='g(x)=0: 1.5 - 0.5x1 - x2 = 0'
+    )
 
-    fig.colorbar(surf, shrink=0.5)
+    colors = ['blue', 'orange', 'green', 'red']
+
+    labels = [
+        'DFP start [2,3.5]',
+        'DFP start [0,3]',
+        'BFGS start [2,3.5]',
+        'BFGS start [0,3]'
+    ]
+    markers = ['o', 's', '^', 'x']
+    for i, path in enumerate([path1, path2, path3, path4]):
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1],
+                 marker=markers[i],
+                 color=colors[i],
+                 linewidth=1,
+                 label=labels[i])
+
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+    plt.title("Funkcja Rosenbrocka z ograniczeniem liniowym")
+    plt.legend()
+    plt.grid(True)
     plt.show()
 
-# Ta wielbłądowa funkcja 
+
+
+# THREE HUMP CAMEL
 
 def three_hump_camel_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None):
     x1_new = np.linspace(x1[0], x1[1], resolution)
@@ -158,117 +203,130 @@ def three_hump_camel_f_draw_3D_surf(x1, x2, resolution, result, func_val):
 
     plt.show()
 
-def three_hump_camel_penalty_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None, penalty=100):
+def three_hump_camel_f_draw_contour_3_bez_ograniczen(x1, x2, levels, resolution,
+                                    path1, path2, path3, path4):
+
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
 
-    # funkcja Three-Hump Camel
-    f = 2*X**2 - 1.05*X**4 + (X**6)/6 + X*Y + Y**2
+    Z = np.zeros_like(X)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            x = X[i, j]
+            y = Y[i, j]
 
-    # constraint
-    g = X**2 + Y**2 - 1
+            Z[i, j] = (2*x**2
+                       - 1.05*x**4
+                       + (x**6)/6
+                       + x*y
+                       + y**2)
 
-    # kara tylko poza okręgiem
-    violation = np.maximum(0, g)
+    plt.figure()
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
+    plt.colorbar()
 
-    # funkcja z karą
-    Z = f + penalty * violation**2
+    colors = ['blue', 'orange', 'green', 'red']
 
-    plt.figure(figsize=(8,6))
+    labels = [
+        'DFP start [-2,0]',
+        'DFP start [2,0]',
+        'BFGS start [-2,0]',
+        'BFGS start [2,0]'
+    ]
 
-    contour = plt.contour(X, Y, Z, levels=levels)
-    plt.colorbar(contour)
+    for i, path in enumerate([path1, path2, path3, path4]):
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1],
+                 'o-',
+                 color=colors[i],
+                 linewidth=1,
+                 label=labels[i])
 
-    # ograniczenie: okrąg jednostkowy
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+    plt.title("Funkcja Three-Hump Camel bez ograniczeń")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def three_hump_camel_f_draw_contour_3_z_ograniczeniami(x1, x2, levels, resolution,
+                                    path1, path2, path3, path4):
+
+    x1_new = np.linspace(x1[0], x1[1], resolution)
+    x2_new = np.linspace(x2[0], x2[1], resolution)
+
+    X, Y = np.meshgrid(x1_new, x2_new)
+
+    Z = np.zeros_like(X)
+
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            x = X[i, j]
+            y = Y[i, j]
+
+            Z[i, j] = (2*x**2
+                       - 1.05*x**4
+                       + (x**6)/6
+                       + x*y
+                       + y**2)
+
+    plt.figure()
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
+    plt.colorbar()
+
     theta = np.linspace(0, 2*np.pi, 400)
     circle_x = np.cos(theta)
     circle_y = np.sin(theta)
 
-    plt.plot(circle_x, circle_y,
-             color='black',
-             linewidth=2,
-             label='x1² + x2² = 1')
+    Xg, Yg = np.meshgrid(x1_new, x2_new)
 
-    # punkty
-    plt.scatter(result[0], result[1],
-                color='red',
-                s=100,
-                label='punkt końcowy')
+    mask = Xg**2 + Yg**2 > 1
 
-    plt.scatter(xk_first[0], xk_first[1],
-                color='green',
-                s=100,
-                label='punkt początkowy')
+    plt.contourf(
+    Xg,
+    Yg,
+    mask,
+    levels=[0.5, 1],
+    colors=['gray'],
+    alpha=0.2
+)
+    plt.plot(
+    circle_x,
+    circle_y,
+    color='black',
+    linewidth=1.5,
+    label='x1² + x2² = 1'
+)
+    colors = ['blue', 'orange', 'green', 'red']
 
-    # trajektoria
-    if path is not None:
+    labels = [
+        'x = [-2, 0] DFP',
+        'x = [2, 0] DFP',
+        'x = [-2, 0] BFGS',
+        'x = [2, 0] BFGS'
+    ]
+
+    for i, path in enumerate([path1, path2, path3, path4]):
         path = np.array(path)
-
-        plt.plot(path[:,0], path[:,1],
+        plt.plot(path[:, 0], path[:, 1],
                  'o-',
-                 color='blue',
+                 color=colors[i],
                  linewidth=1,
-                 label='trajektoria')
+                 label=labels[i])
 
     plt.xlabel("x1")
     plt.ylabel("x2")
-    plt.title("Funkcja Three-Hump Camel + penalty")
-
-    plt.axis('equal')
+    plt.title("Funkcja Three-Hump Camel z ograniczeniami")
     plt.legend()
+    plt.grid(True)
     plt.show()
 
-def three_hump_camel_penalty_draw_3D(
-        x1, x2, resolution,
-        result, func_val,
-        penalty=100):
 
-    x1_new = np.linspace(x1[0], x1[1], resolution)
-    x2_new = np.linspace(x2[0], x2[1], resolution)
 
-    X, Y = np.meshgrid(x1_new, x2_new)
 
-    # funkcja bazowa
-    f = 2*X**2 - 1.05*X**4 + (X**6)/6 + X*Y + Y**2
-
-    # constraint
-    g = X**2 + Y**2 - 1
-
-    violation = np.maximum(0, g)
-
-    # funkcja z karą
-    Z = f + penalty * violation**2
-
-    fig = plt.figure(figsize=(10,7))
-
-    ax = plt.axes(projection='3d')
-
-    surf = ax.plot_surface(
-        X, Y, Z,
-        cmap='viridis',
-        edgecolor='none'
-    )
-
-    ax.scatter(
-        result[0],
-        result[1],
-        func_val,
-        color='red',
-        s=100
-    )
-
-    ax.set_title("Three-Hump Camel + Penalty")
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    ax.set_zlabel("f(x1,x2)")
-
-    fig.colorbar(surf, shrink=0.5)
-
-    plt.show()
-
-# Tutaj funkcja Himmelblaua 
+### HIMMELBLAU
 
 def himmelblau_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path=None):
     x1_new = np.linspace(x1[0], x1[1], resolution)
@@ -278,7 +336,7 @@ def himmelblau_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path
     Z = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
 
     plt.figure()
-    plt.contour(X, Y, Z, levels = levels)
+    plt.contour(X, Y, Z, levels = levels, linewidths=0.5)
     plt.colorbar()
 
 
@@ -294,6 +352,7 @@ def himmelblau_f_draw_contour(x1, x2, levels, resolution, xk_first, result, path
     plt.ylabel("x2")
     plt.title("Funkcja Himmeblaua")
     plt.show()
+
 
 def himmelblau_f_draw_3D_surf(x1, x2, resolution, result, func_val):
     x1_new = np.linspace(x1[0], x1[1], resolution)
@@ -316,137 +375,171 @@ def himmelblau_f_draw_3D_surf(x1, x2, resolution, result, func_val):
 
     plt.show()
 
-def himmelblau_penalty_draw_contour(
-        x1, x2,
-        levels,
-        resolution,
-        xk_first,
-        result,
-        path=None,
-        penalty=100):
+
+def himmelblau_f_draw_contour_3_z_ograniczeniami(x1, x2, levels, resolution,
+                                path1, path2, path3, path4):
 
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
 
-    # funkcja Himmelblaua
-    f = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
+    Z = np.zeros_like(X)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            Z[i, j] = (X[i, j]**2 + Y[i, j] - 11)**2 + (X[i, j] + Y[i, j]**2 - 7)**2
 
-    # constraint
-    g = X - Y + 3
+    plt.figure()
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
+    plt.colorbar()
 
-    violation = np.maximum(0, g)
+    xmin, xmax = x1[0], x1[1]
+    ymin, ymax = x2[0], x2[1]
 
-    # funkcja z karą
-    Z = f + penalty * violation**2
+    candidates = []
 
-    plt.figure(figsize=(8,6))
+    y = xmin + 3
+    if ymin <= y <= ymax:
+        candidates.append([xmin, y])
 
-    contour = plt.contour(X, Y, Z, levels=levels)
-    plt.colorbar(contour)
+    y = xmax + 3
+    if ymin <= y <= ymax:
+        candidates.append([xmax, y])
 
-    # prosta constraintu:
-    # x1 - x2 + 2 = 0
-    # x2 = x1 + 2
-    line_x = np.linspace(x1[0], x1[1], 400)
-    line_y = line_x + 3
+    x = ymin - 3
+    if xmin <= x <= xmax:
+        candidates.append([x, ymin])
 
-    plt.plot(
-        line_x,
-        line_y,
-        color='black',
-        linewidth=2,
-        label='x1 - x2 + 3 = 0'
-    )
+    x = ymax - 3
+    if xmin <= x <= xmax:
+        candidates.append([x, ymax])
 
-    # punkt startowy
-    plt.scatter(
-        xk_first[0],
-        xk_first[1],
-        color='green',
-        s=100,
-        label='punkt początkowy'
-    )
+    candidates = np.array(candidates)
 
-    # punkt końcowy
-    plt.scatter(
-        result[0],
-        result[1],
-        color='red',
-        s=100,
-        label='punkt końcowy'
-    )
+    xmin, xmax = x1[0], x1[1]
+    ymin, ymax = x2[0], x2[1]
 
-    # trajektoria
-    if path is not None:
-        path = np.array(path)
+    x_fill = np.linspace(xmin, xmax, 400)
+    y_line = x_fill + 3
+
+    y_upper = np.minimum(y_line, ymax)
+
+    plt.fill_between(
+    x_fill,
+    ymin,
+    y_upper,
+    color='gray',
+    alpha=0.2
+)
+
+    if len(candidates) >= 2:
+        candidates = candidates[np.argsort(candidates[:, 0])]
 
         plt.plot(
-            path[:,0],
-            path[:,1],
-            'o-',
-            color='blue',
-            linewidth=1,
-            label='trajektoria'
+            candidates[:, 0],
+            candidates[:, 1],
+            color='black',
+            linewidth=1.5,  
+            label='x1 - x2 + 3 = 0'
         )
+
+    colors = ['blue', 'orange', 'green', 'red']
+    labels = ['x = [0,0] DFP', 'x = [-0.39,-0.64] DFP', 'x = [0,0] BFGS', 'x = [-0.39,-0.64] BFGS']
+    for i, path in enumerate([path1, path2, path3, path4]):
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1],
+                 'o-',
+                 color=colors[i],
+                 linewidth=1,
+                 label=labels[i])
+        
+
 
     plt.xlabel("x1")
     plt.ylabel("x2")
-
-    plt.title("Himmelblau + Penalty")
-
+    plt.title("Funkcja Himmelblau z ograniczeniami")
     plt.legend()
+    plt.grid(True)
     plt.show()
 
-def himmelblau_penalty_draw_3D(
-        x1, x2,
-        resolution,
-        result,
-        func_val,
-        penalty=100):
+def himmelblau_f_draw_contour_3_bez_ograniczen(x1, x2, levels, resolution,
+                                path1, path2, path3, path4):
 
     x1_new = np.linspace(x1[0], x1[1], resolution)
     x2_new = np.linspace(x2[0], x2[1], resolution)
 
     X, Y = np.meshgrid(x1_new, x2_new)
 
-    # funkcja Himmelblaua
-    f = (X**2 + Y - 11)**2 + \
-        (X + Y**2 - 7)**2
+    Z = np.zeros_like(X)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            Z[i, j] = (X[i, j]**2 + Y[i, j] - 11)**2 + (X[i, j] + Y[i, j]**2 - 7)**2
 
-    # constraint
-    g = X - Y + 3
+    plt.figure()
+    plt.contour(X, Y, Z, levels=levels, linewidths=0.5)
+    plt.colorbar()
 
-    violation = np.maximum(0, g)
 
-    # penalty
-    Z = f + penalty * violation**2
+    colors = ['blue', 'orange', 'green', 'red']
+    labels = ['x = [0,0] DFP', 'x = [-0.39,-0.64] DFP', 'x = [0,0] BFGS', 'x = [-0.39,-0.64] BFGS']
+    for i, path in enumerate([path1, path2, path3, path4]):
+        path = np.array(path)
+        plt.plot(path[:, 0], path[:, 1],
+                 'o-',
+                 color=colors[i],
+                 linewidth=1,
+                 label=labels[i])
 
-    fig = plt.figure(figsize=(10,7))
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+    plt.title("Funkcja Himmelblau bez ograniczeń")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
-    ax = plt.axes(projection='3d')
 
-    surf = ax.plot_surface(
-        X, Y, Z,
-        cmap='viridis',
-        edgecolor='none'
-    )
+### ITERACJE
 
-    ax.scatter(
-        result[0],
-        result[1],
-        func_val,
-        color='red',
-        s=100
-    )
+def drawFValuesLog(f_values1, f_values2, f_values3, f_values4,
+                   label1='Metoda 1',
+                   label2='Metoda 2',
+                   label3='Metoda 3', 
+                   label4='Metoda 4'):
 
-    ax.set_title("Himmelblau + Penalty")
+    plt.figure(figsize=(8, 5))
 
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    ax.set_zlabel("f(x1,x2)")
+    plt.semilogy(np.arange(len(f_values1)), f_values1, marker='o', label=label1, color='blue')
+    plt.semilogy(np.arange(len(f_values2)), f_values2, marker='s', label=label2, color='orange')
+    plt.semilogy(np.arange(len(f_values3)), f_values3, marker='^', label=label3, color='green')
+    plt.semilogy(np.arange(len(f_values4)), f_values4, marker='x', label=label4, color='red')
 
-    fig.colorbar(surf, shrink=0.5)
+    plt.xlabel('Numer iteracji')
+    plt.ylabel('Wartość funkcji celu')
+    plt.title('Porównanie zbieżności w zależności od punktu początkowego (skala logarytmiczna)')
+    plt.grid(True, which='both')
+    plt.legend()
 
     plt.show()
+
+
+def drawFValues(f_values1, f_values2, f_values3, f_values4,
+                label1='Metoda 1',
+                label2='Metoda 2',
+                label3='Metoda 3', 
+                label4='Metoda 4'):
+
+    plt.figure(figsize=(8, 5))
+
+    plt.plot(np.arange(len(f_values1)), f_values1, marker='o', label=label1, color='blue')
+    plt.plot(np.arange(len(f_values2)), f_values2, marker='s', label=label2, color='orange')
+    plt.plot(np.arange(len(f_values3)), f_values3, marker='^', label=label3, color='green')
+    plt.plot(np.arange(len(f_values4)), f_values4, marker='x', label=label4, color='red')
+
+    plt.xlabel('Numer iteracji')
+    plt.ylabel('Wartość funkcji celu')
+    plt.title('Porównanie zbieżności w zależności od punktu początkowego')
+    plt.grid(True)
+    plt.legend()
+
+    plt.show()
+
