@@ -92,6 +92,28 @@ def Quasi_Newton_DFP(start_x1, start_x2, functions):
 ```
 Powyższa funkcja implementująca wariację DFP, przyjmuje dokładnie te same argument i zwraca te same wartości po wykonaniu obliczeń. 
 
+Wszelkie funkcje związane z rysowaniem wykresów zostały zaimplementowane w pliku ```draw_func.py```. Funkcje rysujące zostały nazwane z wykorzystaniem odpowiednich przedrostków i zrozumiałych aliasów, np.: 
+
+```bash
+def drawFValuesLog(f_values1, f_values2, f_values3, f_values4,
+                   label1='Metoda 1',
+                   label2='Metoda 2',
+                   label3='Metoda 3', 
+                   label4='Metoda 4'):
+    .
+    .
+    .              
+```
+czy,
+
+```bash
+def himmelblau_f_draw_contour_3_bez_ograniczen(x1, x2, levels, resolution,
+                                path1, path2, path3, path4):
+    .
+    .
+    . 
+ ```
+
 
 ## Autorzy :brain:
 
